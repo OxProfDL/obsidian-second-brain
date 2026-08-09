@@ -2,15 +2,15 @@
 
 Operating instructions for Claude Code when working inside this repo.
 
-This is the source repo for **obsidian-second-brain**, a Claude Code skill that turns any Obsidian vault into a living AI-first second brain. The skill ships 32 slash commands across 4 layers (vault management, thinking tools, research toolkit, scheduled agents).
+This is the source repo for **obsidian-second-brain**, a Claude Code skill that turns any Obsidian vault into a living AI-first second brain. The skill ships 44 slash commands across 4 layers (vault management, thinking tools, research toolkit, scheduled agents).
 
 If you are Claude operating on a user's vault, you want `_CLAUDE.md` inside their vault, not this file. This file is for working on the skill's source code.
 
 ## Repo layout
 
-- `commands/` - 32 slash command definitions, one `.md` per command. **This is the platform-neutral source.** Adapters compile it for each platform.
-- `references/` - shared specs that commands link to. **`ai-first-rules.md` is the canonical vault-write spec** and is non-negotiable.
-- `scripts/` - Python helpers (`bootstrap_vault.py`, `vault_health.py`, the `research/` toolkit), plus `build.sh` (the adapter orchestrator) and `lib.sh`.
+- `commands/` - 44 slash command definitions, one `.md` per command. **This is the platform-neutral source.** Adapters compile it for each platform.
+- `references/` - shared specs that commands link to. **`ai-first-rules.md` is the canonical vault-write spec** and is non-negotiable. `write-rules.md` documents the sentinel-marker refresh primitive (`<!-- @generated -->` / `<!-- @user -->` blocks: regenerated content may only replace `@generated` blocks, never hand-edits). `bases/` holds `.base` templates stamped at vault creation.
+- `scripts/` - Python helpers (`bootstrap_vault.py`, `vault_health.py`, `architect_scan.py`, `sweep_non_ascii.py`, the `research/` toolkit), plus `build.sh` (the adapter orchestrator), `setup.sh`, and `lib.sh`.
 - `adapters/` - platform translation layer. `lib.sh` holds shared parsing helpers. `claude-code/`, `codex-cli/`, `gemini-cli/`, `opencode/` each ship an `adapter.sh`.
 - `dist/` - build output, one tree per platform. **Gitignored.** Regenerate with `bash scripts/build.sh` (all platforms) or `bash scripts/build.sh --platform <name>`.
 - `hooks/` - Claude Code hooks shipped with the skill.
