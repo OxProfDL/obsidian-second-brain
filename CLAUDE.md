@@ -13,12 +13,14 @@ If you are Claude operating on a user's vault, you want `_CLAUDE.md` inside thei
 - `scripts/` - Python helpers (`bootstrap_vault.py`, `vault_health.py`, `architect_scan.py`, `sweep_non_ascii.py`, the `research/` toolkit), plus `build.sh` (the adapter orchestrator), `setup.sh`, and `lib.sh`.
 - `adapters/` - platform translation layer. `lib.sh` holds shared parsing helpers. `claude-code/`, `codex-cli/`, `gemini-cli/`, `opencode/` each ship an `adapter.sh`.
 - `dist/` - build output, one tree per platform. **Gitignored.** Regenerate with `bash scripts/build.sh` (all platforms) or `bash scripts/build.sh --platform <name>`.
-- `hooks/` - Claude Code hooks shipped with the skill.
+- `hooks/` - Claude Code hooks shipped with the skill (`validate-ai-first.sh` enforces the vault-write spec; the background agent hook ships inert and requires `OBSIDIAN_BG_AGENT_ENABLED=1`).
+- `integrations/` - non-CLI integrations: `hermes-memory-provider/` (Obsidian vault as Hermes Agent long-term memory, Issue #60) and `obsidian-mcp-server/`.
 - `SKILL.md` - full operating manual loaded by Claude when the skill activates.
 - `architecture.md` - how the layers fit together.
 - `README.md` - public-facing docs on github.com.
 - `pyproject.toml` - Python deps managed via `uv`.
-- `install.sh` - one-shot installer that symlinks the skill into `~/.claude/`. (Legacy; for non-Claude platforms see `dist/<platform>/INSTALL.md` after building.)
+- `install.sh` / `update.sh` - one-shot installer that symlinks the skill and commands into `~/.claude/`, and the matching refresh script. (For non-Claude platforms see `dist/<platform>/INSTALL.md` after building.)
+- `tests/` - pytest smoke tests for the adapter build pipeline and `vault_health.py`.
 
 ### The adapter pattern
 
