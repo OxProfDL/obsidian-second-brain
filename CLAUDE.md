@@ -57,7 +57,19 @@ If you are editing a command file in `commands/`, do not rewrite the AI-first pr
 5. Update `SKILL.md` (Layer section + command list) and `README.md` (commands table).
 6. Add a `CHANGELOG.md` entry under "Unreleased".
 
-## Testing locally
+## Build, test, lint
+
+```bash
+bash scripts/build.sh                      # build all platform adapters into dist/
+bash scripts/build.sh --platform codex-cli # build one platform
+uv run pytest -q                           # smoke tests (tests/)
+uv run pytest tests/test_smoke.py -k codex # single test
+python scripts/sweep_non_ascii.py --check  # substitution-character lint (CI gate)
+```
+
+CI (`.github/workflows/ci.yml`) runs the smoke tests and the substitution-character check on every push and PR.
+
+## Testing commands locally
 
 Symlink the local checkout into Claude Code so slash commands run from this repo:
 
@@ -66,7 +78,7 @@ ln -s "$(pwd)" ~/.claude/skills/obsidian-second-brain
 ln -s commands/* ~/.claude/commands/
 ```
 
-Then restart Claude Code and run the command against a test vault. There is no automated test suite yet - verification is manual: run the command, inspect the resulting vault notes, confirm AI-first compliance.
+Then restart Claude Code and run the command against a test vault. Slash-command behavior has no automated coverage - verification is manual: run the command, inspect the resulting vault notes, confirm AI-first compliance. The pytest suite only covers the build pipeline and vault health checker.
 
 ## Release process
 
