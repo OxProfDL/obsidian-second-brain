@@ -28,10 +28,28 @@ Filterable metadata. Different note types have different schemas (see below) but
 ---
 date: YYYY-MM-DD              # creation or update date
 type: <note-type>             # see Type Schemas below
+generator: <agent>            # REQUIRED on agent-written notes (e.g. claude)
 tags: [...]                   # always include the type as a tag
 ai-first: true                # explicit flag
 ---
 ```
+
+**On `generator:` — stamp at write time, never backfill in bulk.**
+
+An agent that writes a note must declare it in the same write. This is not
+bookkeeping: origin-filtering views (e.g. an `Origin.base`) treat an unstamped
+note as the owner's, so a missing stamp silently misattributes agent output to
+the human.
+
+Backfilling later does not fix it. Once a note is on disk there is usually no
+reliable way to tell who wrote it, and stamping everything unstamped as
+`generator: claude` asserts **false provenance** over the owner's own writing —
+worse than an honest gap. Treat unstamped historical notes as *unknown origin*,
+not as human-authored, and say so rather than inflating a coverage number.
+
+Beware the circular metric: "every Claude-written note is stamped" is trivially
+true of any set defined as the stamped ones. Report coverage against notes the
+agent actually wrote, or report it as unknown.
 
 ### 4. Recency markers per claim
 When stating external facts, attach the date inline:

@@ -97,6 +97,12 @@ if ! printf '%s\n' "$FRONTMATTER" | grep -qE '^ai-first:[[:space:]]*true[[:space
   WARNINGS+=("$BASENAME missing 'ai-first: true' in frontmatter.")
 fi
 
+# Origin stamping. This hook fires on Write/Edit, i.e. an AGENT is writing, so
+# a missing origin field here is always wrong. Stamping at write time is the
+# point: a later backfill pass cannot tell an agent's note from the owner's,
+# and guessing asserts false provenance. Warning only, like every check here.
+has_field "generator" || WARNINGS+=("$BASENAME missing 'generator:' in frontmatter. An agent wrote this file, so it must declare its origin (e.g. 'generator: claude'). See ai-first-rules.md.")
+
 # ── Check 4: 'For future Claude' preamble in body ────────────────────────────
 BODY=$(awk '/^---$/{c++; if (c<2) next; next} c>=2' "$FILE")
 if ! printf '%s\n' "$BODY" | grep -qE '^##[[:space:]]+For future Claude' ; then
